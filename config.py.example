@@ -1,0 +1,196 @@
+"""
+Configuration for AI Trading Companion
+
+IMPORTANT: Copy this file to config.py and fill in your actual values!
+
+    cp config.py.example config.py
+
+Then edit config.py with your settings.
+"""
+
+# ========================================
+# INTERACTIVE BROKERS CONNECTION
+# ========================================
+
+# IBKR TWS or IB Gateway connection settings
+IBKR_HOST = "127.0.0.1"
+
+# Port numbers:
+#   7497 = Paper Trading (TWS)
+#   7496 = Live Trading (TWS) - USE WITH EXTREME CAUTION!
+#   4002 = Paper Trading (IB Gateway)
+#   4001 = Live Trading (IB Gateway) - USE WITH EXTREME CAUTION!
+IBKR_PORT = 7497  # Paper trading port (RECOMMENDED)
+
+# ========================================
+# MARKET DATA (Optional)
+# ========================================
+
+# Polygon.io API Key (optional - IBKR provides real-time data)
+# Get free key at: https://polygon.io
+POLYGON_API_KEY = ""  # Leave empty if not using
+
+# ========================================
+# ACCOUNT & RISK SETTINGS
+# ========================================
+
+# Account size (your trading capital)
+ACCOUNT_SIZE = 10000
+
+# Risk per trade (percentage)
+# 0.01 = 1% risk per trade
+RISK_PER_TRADE = 0.01
+
+# ========================================
+# INDICATOR PARAMETERS
+# ========================================
+
+# Basic Settings
+CONFIRM_ON_CLOSE = True
+MIN_BARS_REQUIRED = 50
+ATR_LENGTH = 14
+
+# TTM Squeeze Settings
+BB_LENGTH = 20      # Bollinger Bands period
+BB_MULT = 2.0       # Bollinger Bands multiplier
+KC_LENGTH = 20      # Keltner Channels period
+KC_MULT = 1.5       # Keltner Channels multiplier
+USE_TRUE_RANGE = True
+MOM_LENGTH = 12     # Momentum period
+
+# Probability Scoring (145 points total)
+PROB_VWAP_MAX = 20
+PROB_MACD_MAX = 25
+PROB_EMA_MAX = 20
+PROB_VOLUME_MAX = 20
+PROB_EXTENSION_MAX = 15
+PROB_SQUEEZE_MAX = 20
+PROB_MOMENTUM_MAX = 15
+PROB_CONFLUENCE_MAX = 10
+
+# MACD Settings
+MACD_FAST = 12
+MACD_SLOW = 26
+MACD_SIGNAL = 9
+
+# Volume Settings
+VOL_SURGE_MULTIPLIER = 1.5
+MIN_RVOL = 0.9
+RVOL_PERIOD = 20
+
+# Probability Thresholds
+HIGH_PROB_THRESHOLD = 70   # 70%+ = HIGH quality
+MED_PROB_THRESHOLD = 50    # 50-69% = MEDIUM quality
+USE_VOL_REGIME = True
+ATR_LOOKBACK = 100
+
+# VWAP Zones
+VWAP_ENTRY_DISTANCE = 0.7    # Entry distance in ATR
+VWAP_STOP_DISTANCE = 0.75    # Stop distance in ATR
+VWAP_TARGET_MULTIPLE = 1.5   # Target multiple (risk:reward)
+MAX_VWAP_DISTANCE = 3.0      # Max distance from VWAP
+
+# Pullback Settings
+SWING_LOOKBACK = 10
+PULLBACK_ENTRY_LEVEL = 0.50
+STOP_BEYOND_SWING = 0.3
+MIN_EXTENSION = 2.0
+
+# Risk Management
+ACCOUNT_EQUITY = 15000
+RISK_PERCENT = 1.0
+USE_TRAILING_STOP = True
+TRAIL_MULTIPLIER = 2.0
+
+# Multi-Timeframe
+SHOW_DAILY = True
+SHOW_4H = True
+SHOW_15M = True
+SHOW_5M = True
+
+# EMA Settings
+FAST_EMA = 9
+SLOW_EMA = 21
+
+# ========================================
+# AI SETTINGS
+# ========================================
+
+# AI Model (requires Ollama)
+# Install: https://ollama.ai
+# Pull model: ollama pull qwen2.5:7b
+AI_MODEL = "qwen2.5:7b"
+AI_TIMEOUT = 15
+AI_MAX_RETRIES = 2
+
+# Three Scenario Thresholds
+AGGRESSIVE_MIN_PROB = 45     # Aggressive: 45%+ probability
+AGGRESSIVE_RISK = 1.2        # 1.2% risk
+AGGRESSIVE_STOP_ATR = 2.5    # Wider stops
+
+MODERATE_MIN_PROB = 55       # Moderate: 55%+ probability
+MODERATE_RISK = 1.0          # 1.0% risk
+MODERATE_STOP_ATR = 2.0      # Standard stops
+
+CONSERVATIVE_MIN_PROB = 70   # Conservative: 70%+ probability
+CONSERVATIVE_RISK = 0.75     # 0.75% risk
+CONSERVATIVE_STOP_ATR = 1.5  # Tighter stops
+
+# ========================================
+# DASHBOARD SETTINGS
+# ========================================
+
+AI_DASHBOARD_PORT = 8052
+AI_DASHBOARD_HOST = "127.0.0.1"
+AI_UPDATE_INTERVAL = 3000    # Milliseconds (3 seconds)
+AI_ANALYSIS_INTERVAL = 5     # Seconds between analyses
+
+# ========================================
+# PAPER TRADING (Safety Settings)
+# ========================================
+
+PAPER_TRADE_ENABLED = True
+PAPER_TRADE_SCENARIOS = 3
+PAPER_EQUITY_PER_SCENARIO = 15000
+PAPER_TRADE_LOG_DIR = "logs/ai_paper_trading"
+
+# ========================================
+# SAFETY CONTROLS
+# ========================================
+
+# Maximum daily loss (in dollars)
+MAX_DAILY_LOSS = 150
+
+# Maximum position size (in dollars)
+MAX_POSITION_SIZE = 1000
+
+# Maximum number of concurrent positions
+MAX_CONCURRENT_POSITIONS = 5
+
+# Symbol diversity (prevent concentration)
+MIN_SYMBOLS_FOR_DIVERSITY = 3
+
+# ========================================
+# LOGGING
+# ========================================
+
+LOG_LEVEL = "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+LOG_TO_FILE = True
+LOG_DIR = "logs"
+
+# ========================================
+# ADVANCED SETTINGS (Don't change unless you know what you're doing)
+# ========================================
+
+# Data caching
+CACHE_ENABLED = True
+CACHE_TTL = 300  # Seconds (5 minutes)
+
+# Parallel processing
+ENABLE_PARALLEL = True
+MAX_WORKERS = 10
+
+# AI caching
+AI_CACHE_ENABLED = True
+AI_CACHE_TTL = 300
+AI_CACHE_MAX_SIZE = 100
