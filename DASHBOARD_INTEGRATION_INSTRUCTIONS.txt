@@ -1,0 +1,196 @@
+"""
+Dashboard Integration Instructions for Paper Trading
+
+Add these changes to dashboard_unified.py:
+"""
+
+# ============================================
+# STEP 1: Add Import (Line 18, after config import)
+# ============================================
+from paper_trading_engine import PaperTradingEngine
+
+
+# ============================================
+# STEP 2: Initialize in __init__ (Line 32, after self.l2_handler = None)
+# ============================================
+self.paper_trading = None
+
+
+# ============================================
+# STEP 3: Add Paper Trading Panel to Layout
+# Add this new section in _build_layout() after the "AI VERDICT" section
+# ============================================
+
+# Add this as a new full-width section after L2 order book:
+
+html.Div([
+    html.H3("📊 PAPER TRADING PERFORMANCE", 
+           style={'color': '#2c3e50', 'borderBottom': '2px solid #3498db', 'paddingBottom': '10px'}),
+    html.Div(id='paper-trading-div')
+], style={'padding': '20px', 'backgroundColor': 'white', 'borderRadius': '10px', 
+         'boxShadow': '0 2px 4px rgba(0,0,0,0.1)', 'marginTop': '10px'})
+
+
+# ============================================
+# STEP 4: Add Paper Trading to Callback Outputs
+# Update the callback decorator (around line 150) to include:
+# ============================================
+
+Output('paper-trading-div', 'children'),  # Add this as last output
+
+
+# ============================================
+# STEP 5: Build Paper Trading Display
+# Add this method to the UnifiedDashboard class:
+# ============================================
+
+def _build_paper_trading_display(self, data: Dict) -> html.Div:
+    """Build paper trading performance display."""
+    
+    # Get paper trading stats
+    if not self.paper_trading:
+        return create_empty_state("Paper trading not started")
+    
+    try:
+        stats = self.paper_trading.get_all_stats()
+    except:
+        return create_empty_state("Loading paper trading data...")
+    
+    overall = stats.get('overall', {})
+    
+    # Three scenario cards
+    scenario_cards = []
+    for name in ['aggressive', 'moderate', 'conservative']:
+        if name in stats:
+            s = stats[name]
+            
+            # Color based on P&L
+            pnl_color = '#27ae60' if s['pnl'] > 0 else '#e74c3c' if s['pnl'] < 0 else '#95a5a6'
+            
+            card = html.Div([
+                html.H4(name.upper(), style={'color': '#2c3e50', 'marginBottom': '10px'}),
+                
+                html.Div([
+                    html.Div([
+                        html.Strong("Equity: "),
+                        html.Span(f"${s['equity']:,.2f}", style={'color': pnl_color, 'fontSize': '1.2em'})
+                    ], style={'marginBottom': '5px'}),
+                    
+                    html.Div([
+                        html.Strong("P&L: "),
+                        html.Span(f"${s['pnl']:+,.2f} ({s['pnl_percent']:+.2f}%)", 
+                                 style={'color': pnl_color})
+                    ], style={'marginBottom': '5px'}),
+                    
+                    html.Div([
+                        html.Strong("Trades: "),
+                        html.Span(f"{s['total_trades']} ({s['wins']}W / {s['losses']}L)")
+                    ], style={'marginBottom': '5px'}),
+                    
+                    html.Div([
+                        html.Strong("Win Rate: "),
+                        html.Span(f"{s['win_rate']:.1f}%")
+                    ], style={'marginBottom': '5px'}),
+                    
+                    html.Hr(),
+                    
+                    html.Div([
+                        html.Strong("Position: "),
+                        html.Span("✅ IN TRADE" if s['in_position'] else "⚪ FLAT", 
+                                 style={'color': '#27ae60' if s['in_position'] else '#95a5a6'})
+                    ])
+                ])
+                
+            ], style={
+                'padding': '15px',
+                'backgroundColor': '#ecf0f1',
+                'borderRadius': '8px',
+                'border': '1px solid #bdc3c7'
+            })
+            
+            scenario_cards.append(card)
+    
+    # Overall performance
+    overall_pnl_color = '#27ae60' if overall.get('total_pnl', 0) > 0 else '#e74c3c'
+    
+    return html.Div([
+        # Three scenario cards
+        html.Div(scenario_cards, 
+                style={'display': 'grid', 'gridTemplateColumns': '1fr 1fr 1fr', 
+                      'gap': '15px', 'marginBottom': '15px'}),
+        
+        # Overall stats
+        html.Div([
+            html.H4("OVERALL PERFORMANCE", style={'color': '#2c3e50', 'marginBottom': '10px'}),
+            html.Div([
+                html.Span(f"Total Equity: ${overall.get('total_equity', 0):,.2f}", 
+                         style={'marginRight': '20px', 'fontSize': '1.1em'}),
+                html.Span(f"Total P&L: ", style={'marginRight': '5px'}),
+                html.Span(f"${overall.get('total_pnl', 0):+,.2f} ({overall.get('total_pnl_percent', 0):+.2f}%)", 
+                         style={'color': overall_pnl_color, 'fontSize': '1.2em', 'fontWeight': 'bold'})
+            ])
+        ], style={
+            'padding': '15px',
+            'backgroundColor': '#ecf0f1',
+            'borderRadius': '8px',
+            'textAlign': 'center'
+        })
+    ])
+
+
+# ============================================
+# STEP 6: Update Dashboard Callback
+# In update_dashboard(), add paper_trading to the return tuple (around line 250):
+# ============================================
+
+# After building other components, add:
+paper_trading = self._build_paper_trading_display(data)
+
+# Then in the return statement, add:
+return header, signal_strength, l2_intel, risk_analysis, ai_verdict, l2_orderbook, paper_trading, status
+
+
+# ============================================
+# STEP 7: Update Data Loop to Feed Paper Trading
+# In _data_update_loop() method (around line 300), after AI analysis:
+# ============================================
+
+# After: ai_result = self.ai_analyst.analyze(indicator_result, symbol=self.current_symbol)
+
+# Add:
+# Update paper trading with new analysis
+if self.paper_trading:
+    try:
+        current_bar = indicator_result  # Has current price, high, low
+        self.paper_trading.process_ai_analysis(
+            ai_result,
+            indicator_result,
+            current_price=indicator_result.get('current_price', 0),
+            current_high=indicator_result.get('current_price', 0),  # Use actual high if available
+            current_low=indicator_result.get('current_price', 0),   # Use actual low if available
+            l2_data=l2_stats
+        )
+    except Exception as e:
+        print(f"[ERROR] Paper trading update failed: {e}")
+
+
+# ============================================
+# STEP 8: Initialize Paper Trading in start() method
+# In the start() method (around line 370), after L2 handler init:
+# ============================================
+
+print("[DASHBOARD] Initializing paper trading engine...")
+self.paper_trading = PaperTradingEngine()
+
+
+# ============================================
+# DONE!
+# ============================================
+
+# The dashboard will now show live paper trading performance with:
+# - Equity tracking per scenario
+# - Win/loss stats
+# - Current positions
+# - Overall performance
+
+# All trades are logged to: logs/ai_paper_trading/trades_YYYYMMDD.csv

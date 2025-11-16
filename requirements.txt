@@ -1,0 +1,18 @@
+# AI Trading Companion - Complete Requirements
+# Phases 1, 2, and 3
+
+# Core Dependencies
+pandas>=1.5.0
+numpy>=1.23.0
+ib_insync>=0.9.86
+
+# AI & ML
+ollama>=0.1.0
+
+# Dashboard (Phase 3)
+dash>=2.14.0
+dash-bootstrap-components>=1.5.0
+plotly>=5.17.0
+
+# Optional but Recommended
+python-dotenv>=1.0.0  # For environment variables

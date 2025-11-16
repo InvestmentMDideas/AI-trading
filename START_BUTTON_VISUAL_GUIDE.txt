@@ -1,0 +1,206 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║                    🚀 START BUTTON GUIDE                          ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+┌───────────────────────────────────────────────────────────────────┐
+│  STEP 1: DOUBLE-CLICK TO START                                    │
+└───────────────────────────────────────────────────────────────────┘
+
+    Windows:
+    ┌─────────────────────────────────┐
+    │  📄 START_TRADING_COMPANION.bat │  ← Double-click this!
+    └─────────────────────────────────┘
+
+    Mac/Linux:
+    $ python start_trading_companion.py
+
+
+┌───────────────────────────────────────────────────────────────────┐
+│  STEP 2: STARTUP CHECKS                                           │
+└───────────────────────────────────────────────────────────────────┘
+
+    You'll see:
+
+    ══════════════════════════════════════════════════════════════
+    🎯 AI TRADING COMPANION - STARTUP
+    ══════════════════════════════════════════════════════════════
+
+    📦 Step 1/6: Checking dependencies...
+      ✅ pandas
+      ✅ numpy
+      ✅ ib_insync
+      ✅ dash
+      ✅ ollama
+    
+    ✅ All dependencies installed!
+
+    📁 Step 2/6: Checking system files...
+      ✅ config_ai.py
+      ✅ indicator_engine.py
+      ✅ ai_analyst.py
+      ✅ ibkr_data_feed.py
+      ✅ level2_handler.py
+      ✅ paper_trading_engine.py
+      ✅ trade_logger.py
+      ✅ dashboard_unified.py
+    
+    ✅ All system files present!
+
+    ⚙️  Step 3/6: Loading configuration...
+      ✅ IBKR Host: 127.0.0.1
+      ✅ IBKR Port: 7497
+      ✅ AI Model: qwen2.5:7b
+      ✅ Dashboard Port: 8052
+      ✅ Paper Trading: $15,000 per scenario
+    
+    ✅ Configuration loaded!
+
+    🔌 Step 4/6: Checking IBKR connection...
+      ✅ Connected to IBKR at 127.0.0.1:7497
+    
+    ✅ IBKR connection verified!
+
+    🤖 Step 5/6: Checking Ollama AI...
+      ✅ Ollama is running
+      ✅ Model 'qwen2.5:7b' is available
+    
+    ✅ Ollama AI ready!
+
+    📊 Step 6/6: Preparing logs directory...
+      ✅ Logs: logs/ai_paper_trading
+    
+    ══════════════════════════════════════════════════════════════
+    🚀 STARTUP COMPLETE - LAUNCHING DASHBOARD
+    ══════════════════════════════════════════════════════════════
+
+    📍 Dashboard URL: http://localhost:8052
+    📊 Paper Trading: 3 scenarios with $45,000 total capital
+    📁 Trade Logs: logs/ai_paper_trading
+
+    Press Ctrl+C to stop
+    ══════════════════════════════════════════════════════════════
+
+
+┌───────────────────────────────────────────────────────────────────┐
+│  STEP 3: OPEN BROWSER                                             │
+└───────────────────────────────────────────────────────────────────┘
+
+    Navigate to: http://localhost:8052
+
+    You'll see the dashboard with LIVE DATA:
+
+    ┌─────────────────────────────────────────────────────────────┐
+    │ 🎯 AI TRADING COMPANION - AAPL | $150.25 ↑0.35%            │
+    ├──────────────────────┬──────────────────────────────────────┤
+    │ 📊 SIGNAL STRENGTH   │ 📈 ORDER BOOK INTELLIGENCE          │
+    │                      │                                      │
+    │ Probability: 68% 🟡  │ Bid/Ask Imbalance: +15.2% 🟢        │
+    │ Quality: MEDIUM      │ Support: $150.10                    │
+    │ Squeeze: FIRING      │ Resistance: $150.60                 │
+    ├──────────────────────┼──────────────────────────────────────┤
+    │ ⚖️ RISK ANALYSIS     │ 🤖 AI VERDICT                       │
+    │                      │                                      │
+    │ Entry: $150.30       │ RECOMMENDED: MODERATE                │
+    │ Stop:  $149.00       │ Confidence: 72%                      │
+    │ Target: $152.00      │                                      │
+    │ Size:   100 shares   │ 3 Scenarios Ready                    │
+    └──────────────────────┴──────────────────────────────────────┘
+    │ 📋 LEVEL 2 ORDER BOOK                                       │
+    └─────────────────────────────────────────────────────────────┘
+    │ 📊 PAPER TRADING PERFORMANCE (LIVE)                         │
+    │                                                             │
+    │ ┌──────────────┬──────────────┬──────────────┐            │
+    │ │ AGGRESSIVE   │ MODERATE     │ CONSERVATIVE │            │
+    │ ├──────────────┼──────────────┼──────────────┤            │
+    │ │ Equity:      │ Equity:      │ Equity:      │            │
+    │ │ $15,216      │ $15,100      │ $15,000      │            │
+    │ │              │              │              │            │
+    │ │ P&L:         │ P&L:         │ P&L:         │            │
+    │ │ +$216(1.4%)  │ +$100(0.7%)  │ $0 (0.0%)    │            │
+    │ │              │              │              │            │
+    │ │ Trades: 3    │ Trades: 1    │ Trades: 0    │            │
+    │ │ 2W / 1L      │ 1W / 0L      │ 0W / 0L      │            │
+    │ │              │              │              │            │
+    │ │ Win Rate:    │ Win Rate:    │ Win Rate:    │            │
+    │ │ 66.7%        │ 100%         │ N/A          │            │
+    │ │              │              │              │            │
+    │ │ Position:    │ Position:    │ Position:    │            │
+    │ │ ✅ LONG      │ ⚪ FLAT      │ ⚪ FLAT      │            │
+    │ └──────────────┴──────────────┴──────────────┘            │
+    │                                                             │
+    │ OVERALL: $45,316 total | +$316 (+0.70%) P&L                │
+    └─────────────────────────────────────────────────────────────┘
+
+
+┌───────────────────────────────────────────────────────────────────┐
+│  STEP 4: WATCH IT TRADE                                           │
+└───────────────────────────────────────────────────────────────────┘
+
+    In the console, you'll see trades happening:
+
+    [AGGRESSIVE] ENTRY: LONG 120 AAPL @ $150.30
+      Stop: $149.00 | Target: $152.00
+
+    [MODERATE] Limit order filled @ $150.00
+      Waiting for VWAP zone...
+
+    [AGGRESSIVE] EXIT: AAPL @ $152.00 | TARGET
+      P&L: $204.00 | Equity: $15,204.00
+
+    [LOGGER] Trade exit logged: aggressive_AAPL_20251115_143022
+      P&L: $204.00 (1.36%) | WIN
+
+
+┌───────────────────────────────────────────────────────────────────┐
+│  STEP 5: CHECK THE LOGS                                           │
+└───────────────────────────────────────────────────────────────────┘
+
+    All trades are logged to CSV:
+
+    logs/ai_paper_trading/
+    ├── trades_20251115.csv       ← Every trade with full context
+    ├── signals_20251115.csv      ← Every AI signal
+    └── performance_20251115.json ← Daily performance stats
+
+
+┌───────────────────────────────────────────────────────────────────┐
+│  STOP THE SYSTEM                                                  │
+└───────────────────────────────────────────────────────────────────┘
+
+    Press Ctrl+C in the console:
+
+    🛑 Shutdown requested...
+    Stopping dashboard...
+    ✅ Shutdown complete
+
+
+╔═══════════════════════════════════════════════════════════════════╗
+║                    ✅ THAT'S IT!                                  ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+It's literally ONE CLICK to:
+  ✅ Start the indicator engine
+  ✅ Launch the AI analyst  
+  ✅ Open the dashboard
+  ✅ Begin paper trading
+  ✅ Start collecting ML data
+
+No manual setup. No configuration. Just:
+
+    START_TRADING_COMPANION.bat
+
+And you're trading! 🚀
+
+═══════════════════════════════════════════════════════════════════
+
+💡 TIPS:
+
+  - Let it run 24/7 to collect maximum data
+  - Check logs daily to see what's working
+  - After 1 week, analyze the CSV files
+  - Adjust thresholds based on results
+  - After 1 month, consider optimizing strategies
+
+═══════════════════════════════════════════════════════════════════
+
+🎯 YOUR SYSTEM IS READY!
