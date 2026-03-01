@@ -2,7 +2,7 @@
 
 A production-grade algorithmic day trading system for US equities, built from the ground up after a failed V3 predecessor. Designed around mechanical stability, broker-native safety, and a data-first approach to machine learning.
 
-**Status**: Paper trading (data collection phase) | **Version**: 4.4.1 | **Codebase**: ~23,000 lines across 16+ modules | **Tests**: 167+
+**Status**: Paper trading (data collection phase) | **Version**: 4.5.0 | **Codebase**: ~23,000 lines across 16+ modules | **Tests**: 167+
 
 ---
 
@@ -134,7 +134,8 @@ The ML system follows a deliberate 4-sprint rollout designed to avoid the mistak
 |--------|-------------|--------|
 | **S1: Feature Infrastructure** | Multi-feature builder shared between training and inference | Deployed |
 | **S1.5: Shadow Candidates** | Log what the system *would have* traded for counterfactual analysis | Deployed |
-| **S2: Offline Trainer** | LightGBM with Optuna hyperparameter tuning, walk-forward temporal CV | In Progress |
+| **S2: Offline Trainer** | LightGBM with Optuna hyperparameter tuning, walk-forward temporal CV | Deployed |
+| **S2.5: Triple Barrier** | Multiclass labeling (profit/neutral/loss) on shadow candidates | Deployed |
 | **S3: Shadow Predictor** | Score candidates without affecting live trading | Blocked on S2 |
 | **S4: Veto Integration** | ML filters out low-probability setups in real-time | Blocked on S3 |
 
@@ -182,7 +183,7 @@ All tests must pass at 100% before any deployment.
 | Layer | Technology |
 |-------|-----------|
 | **Language** | Python 3.11+ |
-| **Broker** | Interactive Brokers via ib_insync (synchronous) |
+| **Broker** | Interactive Brokers via ib_async (synchronous) |
 | **Market Data** | Polygon.io REST API (premarket scanning) |
 | **Database** | SQLite with WAL mode (crash-safe writes) |
 | **Configuration** | TOML files + frozen Python dataclasses |
@@ -198,7 +199,7 @@ All tests must pass at 100% before any deployment.
 The system intentionally keeps external dependencies minimal to reduce supply chain risk:
 
 ```
-ib_insync>=0.9.86
+ib_async>=0.9.86
 requests>=2.31.0
 pytz>=2024.1
 python-dotenv>=1.0.0
@@ -256,6 +257,8 @@ algotrader/
 | **4.3** | Dynamic exit system — breakeven, trailing, partial, pyramid, profit lock. |
 | **4.4** | ML feature infrastructure, shadow candidate logging, L2 market depth, MCP server. |
 | **4.4.1** | Multi-model code review (15 fixes across 9 files), Electron desktop app. |
+| **4.4.2** | SPY market context features, pre-market audit fixes. |
+| **4.5.0** | ib_async migration (maintained fork of archived ib_insync), triple barrier labeling for ML. |
 
 ### Why V4 Exists: The V3 Post-Mortem
 
@@ -291,4 +294,4 @@ Copyright (c) 2025–2026 InvestmentMDideas
 
 ---
 
-*V4.4.1 | Last updated March 2026*
+*V4.5.0 | Last updated March 2026*
