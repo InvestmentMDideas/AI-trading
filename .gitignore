@@ -1,0 +1,68 @@
+# Secrets & API Keys
+.env
+*.key
+*.pem
+secrets.json
+credentials.json
+
+# Trading Data & State
+v4_data/
+*.db
+*.db-wal
+*.db-shm
+positions.json
+state.json
+
+# Logs
+logs/
+*.log
+
+# ML Models & Artifacts
+models/
+*.pkl
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+*.egg
+venv/
+.venv/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node / Electron
+electron-app/node_modules/
+electron-app/dist/
+electron-app/out/
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Backups & Temp
+*.bak
+*.tmp
+*.temp
+archive/
+
+# Keep examples
+!.env.example
+!v4_config.toml.example

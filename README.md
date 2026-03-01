@@ -1,399 +1,294 @@
-# 🤖 AI-Powered Day Trading System
+# V4 Momentum Trading System
 
-An advanced automated day trading system combining **145-point technical probability scoring** with **multi-stage AI reasoning** for systematic trade generation and execution.
+A production-grade algorithmic day trading system for US equities, built from the ground up after a failed V3 predecessor. Designed around mechanical stability, broker-native safety, and a data-first approach to machine learning.
 
-![System Architecture](docs/ai_trading_flow_diagram.svg)
-
-## 🎯 Key Features
-
-- **📊 145-Point Probability Scoring**: Comprehensive technical analysis across 8 components (VWAP, MACD, EMA, Volume, Squeeze, Momentum, etc.)
-- **🤖 Multi-Stage AI Reasoning**: 6-stage analysis pipeline using Ollama (qwen2.5:7b) for context-aware decision making
-- **🎬 Three Trading Scenarios**: Adaptive strategies (Aggressive 45%+, Moderate 55%+, Conservative 70%+) with automatic selection
-- **📈 Real-Time Dashboard**: Live monitoring with signal strength, order book intelligence, risk analysis, and AI verdicts
-- **🛡️ Safety-First Design**: Paper trading enforcement, daily loss limits, position controls, emergency stops
-- **⚡ High Performance**: Parallel processing of 50+ stocks with 73% faster analysis, <5% AI failure rate
-
-## 📈 Performance Metrics
-
-| Metric | v1.0 | v2.0 | Improvement |
-|--------|------|------|-------------|
-| **Signal Generation** | Baseline | 10x more | +1000% |
-| **Average Probability** | 25% | 50%+ | +100% |
-| **AI Reliability** | 55% | 95%+ | +73% |
-| **Processing Speed** | Baseline | 73% faster | Sequential → Parallel |
-| **Stock Coverage** | 20 stocks | 50+ stocks | +150% |
-
-**Target**: $1,000/day profit | **Starting Capital**: $10,000 | **Risk**: 1%/trade
-
-## 🏗️ System Architecture
-
-```
-┌─────────────┐     ┌──────────────────┐     ┌─────────────┐     ┌──────────────┐
-│   IBKR      │────▶│  Indicator       │────▶│  AI Analyst │────▶│  Execution   │
-│   Data      │     │  Engine          │     │  (Ollama)   │     │  & Monitor   │
-│ (50 stocks) │     │ (145pt scoring)  │     │  (6 stages) │     │  Dashboard   │
-└─────────────┘     └──────────────────┘     └─────────────┘     └──────────────┘
-   Multi-TF          VWAP•MACD•EMA           Context→Tech         Paper Trading
-   Level 2           Squeeze•Volume          Risk→Scenarios       Level 2 Intel
-```
-
-### Component Breakdown
-
-**Layer 1: Data Collection**
-- Interactive Brokers (TWS/Gateway) on port 7497
-- Multi-timeframe data (1min, 5min, 15min, 4H, Daily)
-- Level 2 order book streaming
-- 50+ stocks with 60-second refresh
-
-**Layer 2: Analysis Engine**
-- **Indicator Engine**: 145-point probability scoring across 8 technical components
-- **AI Analyst**: 6-stage reasoning (Market Context → Technical → Risk → 3 Scenarios)
-
-**Layer 3: Decision Engine**
-- Three adaptive scenarios with auto-selection
-- Risk-adjusted position sizing
-- Entry/Stop/Target calculation
-
-**Layer 4: Execution & Monitoring**
-- Paper trading with safety controls
-- Real-time unified dashboard (Port 8052)
-- Level 2 order book intelligence
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Python 3.8+
-- Interactive Brokers TWS or IB Gateway
-- Ollama with qwen2.5:7b model
-
-### Installation
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/yourusername/ai-trading-system.git
-cd ai-trading-system
-
-# 2. Install dependencies
-pip install -r requirements.txt
-
-# 3. Install and setup Ollama
-# Visit: https://ollama.ai
-ollama pull qwen2.5:7b
-
-# 4. Configure settings
-cp config.py.example config.py
-# Edit config.py with your settings
-
-# 5. Verify setup
-python setup_check.py
-```
-
-### Running the System
-
-```bash
-# Run tests
-python test_indicator.py      # Test 145-point scoring
-python test_ai_analyst.py      # Test AI reasoning
-
-# Analyze a symbol
-python example_analyze.py SPY
-
-# Full AI analysis
-python example_with_ai.py AAPL
-
-# Start the dashboard
-python dashboard_unified.py
-# Open: http://localhost:8052
-```
-
-## 📊 Usage Examples
-
-### Quick Analysis
-
-```python
-from indicator_engine import IndicatorEngine
-from ibkr_data_feed import IBKRDataFeed
-
-# Connect to IBKR
-feed = IBKRDataFeed(port=7497)
-feed.connect()
-
-# Analyze a symbol
-engine = IndicatorEngine(feed)
-result = engine.analyze('SPY')
-
-print(f"Probability: {result['probability']}%")
-print(f"Quality: {result['quality']}")
-print(f"Signals: {result['signals']}")
-```
-
-### Full AI Analysis
-
-```python
-from ai_analyst import AIAnalyst
-
-analyst = AIAnalyst(model="qwen2.5:7b")
-ai_result = analyst.analyze(indicator_data, symbol='SPY')
-
-print(f"Recommendation: {ai_result['recommendation']}")
-print(f"Confidence: {ai_result['recommended_confidence']}%")
-print(f"AI Verdict: {ai_result['overall_verdict']}")
-```
-
-## 🎯 145-Point Scoring System
-
-| Component | Max Points | Description |
-|-----------|------------|-------------|
-| **VWAP Position** | 20 | Distance from VWAP in ATR units |
-| **MACD Alignment** | 25 | MACD line vs signal line position |
-| **EMA Trend** | 20 | Fast EMA vs slow EMA alignment |
-| **Volume Surge** | 20 | Relative volume (RVOL) strength |
-| **Price Extension** | 15 | Price deviation from VWAP |
-| **TTM Squeeze** | 20 | Squeeze status and strength |
-| **Squeeze Momentum** | 15 | Momentum magnitude and direction |
-| **Confluence Bonus** | 10 | Multiple indicators aligning |
-| **TOTAL** | **145** | Converted to 0-100% probability |
-
-**Quality Ratings**:
-- 🟢 **HIGH** (70%+): Premium setups
-- 🟡 **MEDIUM** (50-69%): Standard setups
-- 🔴 **LOW** (<50%): Avoid or wait
-
-## 🤖 AI Reasoning Pipeline
-
-### 6-Stage Analysis
-
-1. **Market Context** (Score: 0-100)
-   - Volatility regime detection
-   - Session identification
-   - Market conditions assessment
-
-2. **Technical Analysis** (Score: 0-100)
-   - Probability assessment
-   - Squeeze evaluation
-   - Trend quality analysis
-
-3. **Risk Assessment** (Score: 0-100)
-   - Entry quality evaluation
-   - Stop placement validation
-   - Risk:Reward ratio calculation
-
-4. **Aggressive Scenario**
-   - Min 45% probability
-   - 1.2% risk tolerance
-   - Wider stops, immediate entry
-
-5. **Moderate Scenario**
-   - Min 55% probability
-   - 1.0% risk tolerance
-   - Balanced approach
-
-6. **Conservative Scenario**
-   - Min 70% probability
-   - 0.75% risk tolerance
-   - Premium setups only
-
-### AI Model
-
-- **Engine**: Ollama (local inference)
-- **Model**: qwen2.5:7b (7B parameter LLM)
-- **Cache**: 5-minute TTL, ~50% hit rate
-- **Reliability**: <5% failure rate
-
-## 🛡️ Safety Controls
-
-### Built-in Protection
-
-- ✅ **Paper Trading Only**: No live trading capability
-- ✅ **Daily Loss Limit**: $150 maximum (configurable)
-- ✅ **Position Size Limit**: $1,000 per trade
-- ✅ **Max Concurrent Positions**: 5 simultaneous trades
-- ✅ **Symbol Diversity**: Minimum 3 different symbols
-- ✅ **Emergency Stops**: Manual kill switches
-
-### Risk Management
-
-```python
-# Example configuration
-MAX_DAILY_LOSS = 150          # Stop trading if hit
-MAX_POSITION_SIZE = 1000      # Per trade limit
-RISK_PER_TRADE = 0.01         # 1% of account
-```
-
-## 📊 Dashboard Features
-
-**Unified Dashboard** (Port 8052):
-
-- **Signal Strength**: Real-time probability bar, score breakdown
-- **Order Book Intelligence**: Bid/Ask imbalance, spread analysis
-- **Risk Analysis**: Entry/Stop/Target levels, R:R ratios
-- **AI Verdict**: Three scenarios with confidence scores
-- **Live Level 2**: Real-time order book visualization
-
-**Auto-refresh**: Every 60 seconds
-
-## 🔧 Configuration
-
-Key settings in `config.py`:
-
-```python
-# IBKR Connection
-IBKR_PORT = 7497              # Paper trading
-
-# Risk Settings
-ACCOUNT_SIZE = 10000
-RISK_PER_TRADE = 0.01         # 1%
-
-# AI Model
-AI_MODEL = "qwen2.5:7b"
-
-# Scenario Thresholds
-AGGRESSIVE_MIN_PROB = 45      # 45%+
-MODERATE_MIN_PROB = 55        # 55%+
-CONSERVATIVE_MIN_PROB = 70    # 70%+
-
-# Dashboard
-AI_DASHBOARD_PORT = 8052
-```
-
-See `config.py.example` for all options.
-
-## 📈 Evolution: v1.0 → v2.0
-
-### Major Improvements
-
-**AI Engine**:
-- Switched from DeepSeek-R1 to qwen2.5:7b → 10x more signals
-- Reduced AI failure rate from 45% to <5%
-- Added response caching → 50% speed boost
-
-**Scoring System**:
-- Upgraded from 115 to 145 points → 26% more granular
-- Made squeeze "nice to have" vs mandatory → more flexible
-- Lowered thresholds (70%+ to 50-60%) → better signal flow
-
-**Performance**:
-- Parallel processing → 73% faster
-- 50 stocks (up from 20) → 2.5x coverage
-- Average probability 50%+ (up from 25%) → 2x better quality
-
-## 🧪 Testing
-
-```bash
-# Run all tests
-python test_indicator.py      # 7 tests
-python test_ai_analyst.py     # 6 tests
-python test_dashboard.py      # Component validation
-
-# Expected: All tests pass ✅
-```
-
-## 📁 Project Structure
-
-```
-ai-trading-system/
-├── config.py.example          # Configuration template
-├── requirements.txt           # Dependencies
-├── README.md                  # This file
-│
-├── Core Engine/
-│   ├── ibkr_data_feed.py     # IBKR data connection
-│   ├── indicator_engine.py    # 145-point scoring
-│   ├── market_metrics.py      # Technical calculations
-│   ├── ai_analyst.py          # Multi-stage AI
-│   ├── ai_cache.py            # Response caching
-│   └── prompt_templates.py    # AI prompts
-│
-├── Dashboard/
-│   ├── dashboard_unified.py   # Main dashboard
-│   ├── layout_components.py   # UI components
-│   └── level2_handler.py      # Order book
-│
-├── Testing/
-│   ├── setup_check.py         # Setup verification
-│   ├── test_indicator.py      # Indicator tests
-│   ├── test_ai_analyst.py     # AI tests
-│   └── test_dashboard.py      # Dashboard tests
-│
-└── Examples/
-    ├── example_analyze.py     # Simple analysis
-    └── example_with_ai.py     # Full AI analysis
-```
-
-## 🛠️ Tech Stack
-
-- **Language**: Python 3.8+
-- **Broker API**: ib_insync (Interactive Brokers)
-- **AI Engine**: Ollama (local LLM inference)
-- **AI Model**: qwen2.5:7b (7B parameters)
-- **Dashboard**: Dash + Plotly + Bootstrap
-- **Data Analysis**: pandas, numpy
-- **Technical Indicators**: Custom (Pine Script compatible)
-
-## 📝 Requirements
-
-```
-pandas>=1.5.0
-numpy>=1.23.0
-ib_insync>=0.9.86
-ollama>=0.1.0
-dash>=2.14.0
-dash-bootstrap-components>=1.5.0
-plotly>=5.17.0
-```
-
-## 🤝 Contributing
-
-Contributions welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## ⚠️ Disclaimer
-
-**IMPORTANT**: This software is for **educational and research purposes only**. 
-
-- This system is configured for **paper trading only**
-- Past performance does not guarantee future results
-- Trading involves substantial risk of loss
-- Always do your own research (DYOR)
-- Never trade with money you can't afford to lose
-- The authors are not responsible for any financial losses
-
-**USE AT YOUR OWN RISK**
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Interactive Brokers for market data and execution
-- Ollama team for local LLM infrastructure
-- qwen2.5 model developers
-- Pine Script community for indicator inspiration
-
-## 📧 Contact
-
-- GitHub Issues: [Report bugs or request features](https://github.com/yourusername/ai-trading-system/issues)
-- Discussions: [Ask questions or share ideas](https://github.com/yourusername/ai-trading-system/discussions)
-
-## 🗺️ Roadmap
-
-- [ ] Add backtesting engine
-- [ ] Support for additional brokers
-- [ ] Machine learning for pattern recognition
-- [ ] Mobile dashboard
-- [ ] Advanced order types
-- [ ] Portfolio optimization
-- [ ] Multi-asset support (futures, options, crypto)
+**Status**: Paper trading (data collection phase) | **Version**: 4.4.1 | **Codebase**: ~23,000 lines across 16+ modules | **Tests**: 167+
 
 ---
 
-**Built with** ❤️ **for systematic day trading**
+## Overview
 
-**Version**: 2.0 | **Status**: Production-ready for paper trading | **Last Updated**: November 2025
+V4 is a fully automated gap-and-go momentum trading system that scans premarket for high-probability setups, scores entries against multiple technical conditions, executes bracket orders through Interactive Brokers, and manages positions with a dynamic exit system — all without human intervention during market hours.
+
+The system was purpose-built after V3's failure in live trading (74% backtest accuracy collapsed to 24% live). Every architectural decision in V4 is a direct response to a V3 failure mode.
+
+### What Makes This Different
+
+- **Broker-native stops**: Stop-loss orders live on IB's servers, not in Python. If the process crashes, your positions are still protected.
+- **Synchronous by design**: No async/await, no event spaghetti. One thread, one loop, fully debuggable. V3's async architecture was undebuggable in production.
+- **ML can only veto, never initiate**: The rule-based system generates candidates. ML acts as a filter — it can reject bad setups but cannot create trades on its own. This prevents the feedback loops that killed V3.
+- **Shared training/inference code**: One function builds features for both training and live prediction. No silent divergence.
+
+---
+
+## Architecture
+
+```
+                          ┌─────────────────────────────────┐
+                          │         CONFIGURATION           │
+                          │     TOML + Frozen Dataclass     │
+                          └──────────────┬──────────────────┘
+                                         │
+            ┌────────────────────────────┼────────────────────────────┐
+            │                            │                            │
+    ┌───────▼───────┐          ┌─────────▼─────────┐        ┌───────▼───────┐
+    │   SCANNER     │          │   ORCHESTRATOR    │        │  PERSISTENCE  │
+    │               │          │                   │        │               │
+    │ • Premarket   │◄────────►│ • Phase Manager   │◄──────►│ • SQLite WAL  │
+    │   gap detect  │          │ • Event Loop      │        │ • JSON state  │
+    │ • Multi-layer │          │ • Reconciliation  │        │ • Trade log   │
+    │   filtering   │          │ • Scheduling      │        │               │
+    └───────┬───────┘          └────────┬──────────┘        └───────────────┘
+            │                           │
+            │                  ┌────────▼──────────┐
+            │                  │     STRATEGY      │
+            │                  │                   │
+            └─────────────────►│ • Entry scoring   │
+                               │ • Multi-condition │
+                               │ • Quality gates   │
+                               └────────┬──────────┘
+                                        │
+                               ┌────────▼──────────┐
+                               │      BROKER       │
+                               │                   │
+                               │ • Bracket orders  │
+                               │ • OCA groups      │
+                               │ • Position mgmt   │
+                               └────────┬──────────┘
+                                        │
+                               ┌────────▼──────────┐
+                               │   RISK MANAGER    │
+                               │                   │
+                               │ • Multi-layer     │
+                               │   safety stack    │
+                               │ • Dynamic exits   │
+                               │ • Circuit breakers│
+                               │ • Reconciliation  │
+                               └───────────────────┘
+```
+
+### Core Modules
+
+| Module | Purpose |
+|--------|---------|
+| **Orchestrator** | Phase-based event loop (Premarket → Trading → Cleanup → Overnight) |
+| **Scanner** | Multi-layer premarket gap detection with volume and price filters |
+| **Strategy** | Multi-condition entry scoring system with quality gates |
+| **Broker** | Interactive Brokers wrapper — bracket orders, OCA groups, contract qualification |
+| **Risk Manager** | Multi-layer safety stack, dynamic exit management, position reconciliation |
+| **Persistence** | SQLite (WAL mode) for trades, JSON for runtime state |
+| **Config** | TOML-driven configuration with frozen Python dataclass |
+| **ML Pipeline** | Feature engineering, LightGBM training, shadow candidate analysis |
+| **Error Taxonomy** | Classified IB error handling (informational, connectivity, rejection, fatal) |
+
+---
+
+## Trading Phases
+
+The system operates on a strict daily schedule (all times Eastern):
+
+| Phase | Window | Activity |
+|-------|--------|----------|
+| **Premarket** | 6:00 – 9:30 | Scan for gap-up candidates, build watchlist, rescan every 5 min |
+| **Trading** | 9:30 – 15:55 | Score entries, place bracket orders, manage dynamic exits, reconcile positions |
+| **Cleanup** | 15:55 – 17:00 | Flatten all positions, log daily summary, save state |
+| **Overnight** | 20:00 – 20:30 | Shadow candidate backfill, housekeeping |
+
+---
+
+## Risk Management
+
+The system enforces a multi-layer safety stack. Every trade must pass all layers before execution — covering permanent blacklists, exchange filters, exposure limits, circuit breakers, spread quality gates, and more.
+
+### Dynamic Exit System
+
+Positions are actively managed through multiple exit strategies that activate based on price movement:
+
+- **Breakeven protection** — moves stop to entry after a configurable gain threshold
+- **Trailing stops** — locks in profits as price extends
+- **Partial profit taking** — scales out at predefined levels
+- **Pyramid adds** — scales into winners under strict conditions
+- **Profit lock** — guarantees minimum profit on extended runners
+- **Time-based exits** — removes stagnant positions
+- **End-of-day flatten** — all positions closed before market close
+
+### Backtest Validation
+
+| Metric | Baseline (Static Exits) | Dynamic Exit System | Improvement |
+|--------|------------------------|---------------------|-------------|
+| **Net PnL** | $33,549 | $103,883 | **3.1x** |
+| **Win Rate** | 29.5% | 32.1% | +2.6pp |
+| **Avg Winner** | $487 | $623 | +28% |
+| **Avg Loser** | $168 | $164 | -2% |
+| **Profit Factor** | — | **2.49x** | — |
+
+*Tested across 1,287 trades over 130 trading days.*
+
+---
+
+## Machine Learning Pipeline
+
+The ML system follows a deliberate 4-sprint rollout designed to avoid the mistakes that killed V3:
+
+| Sprint | Description | Status |
+|--------|-------------|--------|
+| **S1: Feature Infrastructure** | Multi-feature builder shared between training and inference | Deployed |
+| **S1.5: Shadow Candidates** | Log what the system *would have* traded for counterfactual analysis | Deployed |
+| **S2: Offline Trainer** | LightGBM with Optuna hyperparameter tuning, walk-forward temporal CV | In Progress |
+| **S3: Shadow Predictor** | Score candidates without affecting live trading | Blocked on S2 |
+| **S4: Veto Integration** | ML filters out low-probability setups in real-time | Blocked on S3 |
+
+### Design Principles
+
+- **Profit factor over accuracy** — V3 optimized for accuracy (74% backtest → 24% live). V4 optimizes for profit factor: the ratio of gross profit to gross loss.
+- **Walk-forward temporal CV** — Never random train/test splits. Always train on past, validate on future.
+- **One code path** — The same function builds features for training and inference. No silent divergence.
+- **Veto-only** — ML reduces bad trades. It never creates trades.
+
+---
+
+## User Interfaces
+
+### Web Dashboard
+Flask + Plotly web interface for monitoring trades, positions, daily P&L, and system health. Read-only access to the trading database with interactive charts.
+
+### Desktop Application
+Electron + React + TypeScript desktop app for real-time monitoring with native OS integration.
+
+### Claude Code Integration (MCP Server)
+A Model Context Protocol server exposes 12 tools for AI-assisted analysis — read-only system status, trade queries, and configuration inspection, plus write operations (config updates, blacklist management, emergency flatten) with confirmation gates.
+
+### Telegram Notifications
+Non-blocking alerts for trade entries, exits, daily summaries, errors, and circuit breaker events. Runs on daemon threads to never block the trading loop.
+
+---
+
+## Testing
+
+167+ tests across 14 test suites covering all core modules:
+
+- **Unit tests** — config parsing, persistence, broker wrapper, risk manager, strategy scoring
+- **Integration tests** — full trade lifecycle (scan → score → enter → manage → exit)
+- **Regression tests** — specific bugs (infinite flatten loops, stale position data, reconciliation edge cases)
+- **Structural verification** — 63 checks across 11 categories for deployment safety
+- **ML pipeline tests** — feature engineering, trainer, evaluation
+
+All tests must pass at 100% before any deployment.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Language** | Python 3.11+ |
+| **Broker** | Interactive Brokers via ib_insync (synchronous) |
+| **Market Data** | Polygon.io REST API (premarket scanning) |
+| **Database** | SQLite with WAL mode (crash-safe writes) |
+| **Configuration** | TOML files + frozen Python dataclasses |
+| **ML Framework** | LightGBM + Optuna (hyperparameter optimization) |
+| **Web Dashboard** | Flask + Plotly |
+| **Desktop App** | Electron + React + TypeScript |
+| **AI Integration** | MCP Server (Claude Code) |
+| **Notifications** | Telegram Bot API |
+| **Testing** | pytest + custom test framework |
+
+### Minimal Dependencies
+
+The system intentionally keeps external dependencies minimal to reduce supply chain risk:
+
+```
+ib_insync>=0.9.86
+requests>=2.31.0
+pytz>=2024.1
+python-dotenv>=1.0.0
+```
+
+---
+
+## Project Structure
+
+```
+algotrader/
+├── Core Trading Engine
+│   ├── main.py                 # Orchestrator & event loop
+│   ├── config.py               # Configuration dataclass
+│   ├── config_loader.py        # TOML parser
+│   ├── broker.py               # IB Gateway wrapper
+│   ├── polygon_client.py       # Market data client
+│   ├── strategy.py             # Entry scoring system
+│   ├── risk.py                 # Risk management
+│   ├── persistence.py          # SQLite/JSON storage
+│   └── ib_errors.py            # Error taxonomy
+│
+├── ML Pipeline
+│   ├── ml_features.py          # Feature engineering
+│   ├── ml_trainer.py           # LightGBM training pipeline
+│   ├── ml_evaluation.py        # Model evaluation & SHAP analysis
+│   └── l2_collector.py         # L2 market depth collection
+│
+├── User Interfaces
+│   ├── v4_dashboard.py         # Flask web dashboard
+│   ├── v4_mcp_server.py        # Claude Code MCP server
+│   ├── telegram_bot.py         # Telegram notifications
+│   └── electron-app/           # Desktop app (Electron + React)
+│
+├── Testing
+│   └── tests/                  # 167+ tests, 14 suites
+│
+├── Backtesting
+│   └── backtest/               # Historical simulation engine
+│
+└── Configuration
+    ├── v4_config.toml          # System configuration (TOML)
+    └── .env                    # API keys (git-ignored)
+```
+
+---
+
+## Version History
+
+| Version | Highlights |
+|---------|------------|
+| **4.0** | Complete rewrite. Core trading loop, bracket orders, basic risk management. |
+| **4.1** | Multi-layer scanner, entry scoring system, blacklist infrastructure. |
+| **4.2** | IB error taxonomy (30+ codes classified), circuit breakers, order-entry-ratio limits. |
+| **4.3** | Dynamic exit system — breakeven, trailing, partial, pyramid, profit lock. |
+| **4.4** | ML feature infrastructure, shadow candidate logging, L2 market depth, MCP server. |
+| **4.4.1** | Multi-model code review (15 fixes across 9 files), Electron desktop app. |
+
+### Why V4 Exists: The V3 Post-Mortem
+
+V3 was a 3,300-line monolith using async Python. It achieved 74% accuracy in backtesting but collapsed to 24% in live trading. Root causes:
+
+1. **Async was undebuggable** — race conditions and dropped events in production
+2. **Software stops** — stop-losses lived in Python; process crash = unprotected positions
+3. **Code path divergence** — separate training/inference functions silently drifted apart
+4. **Hardcoded constants** — tuning required code changes and redeployment
+5. **Random CV splits** — gave false confidence; temporal ordering was ignored
+
+V3 was declared dead on February 5, 2026. V4 development began the same day.
+
+---
+
+## Disclaimer
+
+This software is for **educational and research purposes**. It is currently configured for paper trading only.
+
+- Trading involves substantial risk of loss
+- Past backtest performance does not guarantee future results
+- This system is under active development
+- The authors are not responsible for any financial losses
+- Always do your own research
+
+---
+
+## License
+
+MIT License — see [LICENSE](LICENSE) for details.
+
+Copyright (c) 2025–2026 InvestmentMDideas
+
+---
+
+*V4.4.1 | Last updated March 2026*
